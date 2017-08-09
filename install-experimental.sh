@@ -70,7 +70,7 @@ update-rc.d ixbus defaults
 
 
 wget -nv https://raw.githubusercontent.com/janztec/empc-x-linux-drivers/master/scripts/empc-can-configbaudrate.sh -O /usr/bin/empc-can-configbaudrate.sh
-
+chmod 755 /usr/bin/empc-can-configbaudrate.sh
 bash /usr/bin/empc-can-configbaudrate.sh
 
 
