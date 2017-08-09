@@ -1,15 +1,19 @@
-!#/bin/bash
+#!/bin/bash
 
 export LC_ALL=C
 
-apt-get update -y
-apt-get -y install whiptail
+ERR='\033[0;31m'
+INFO='\033[0;32m'
+NC='\033[0m' # No Color
+
+KERNEL=$(uname -r)
+
 
 clear
 WELCOME="These drivers will be compiled and installed:\n
 - CAN driver (SocketCAN)\n
 These software components will be installed:\n
-- autoconf, libtool, libsocketcan, can-utils\n
+- ixconfig, ixbus, autoconf, libtool, libsocketcan, can-utils\n
 continue installation?"
 
 if (whiptail --title "emPC-X Installation Script" --yesno "$WELCOME" 20 60) then
@@ -18,7 +22,7 @@ else
     exit 0
 fi
 
-
+apt-get update -y
 apt-get -y install bc build-essential linux-headers-$(uname -r)
 
 # get installed gcc version
@@ -27,23 +31,7 @@ GCCVERBACKUP=$(gcc --version | egrep -o '[0-9]+\.[0-9]+' | head -n 1)
 GCCVER=$(cat /proc/version | egrep -o 'gcc version [0-9]+\.[0-9]+' | egrep -o '[0-9.]+')
 
 
-
-if [ ! -f "/usr/bin/gcc-$GCCVER" ] || [ ! -f "/usr/bin/g++-$GCCVER" ]; then
-    echo "no such version gcc/g++ $GCCVER installed" 1>&2
-    exit 1
-fi
-
-update-alternatives --remove-all gcc 
-update-alternatives --remove-all g++
-
-update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-$GCCVERBACKUP 10
-update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-$GCCVERBACKUP 10
-
-update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-$GCCVER 50
-update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-$GCCVER 50
-
-update-alternatives --set gcc "/usr/bin/gcc-$GCCVER"
-update-alternatives --set g++ "/usr/bin/g++-$GCCVER"
+gcc --version | grep "$GCCVER" || (echo "$ERR Error: gcc $GCCVER not found! $NC"; exit 1);
 
 
 #rm -rf /tmp/empc-x-linux-drivers
@@ -51,36 +39,39 @@ mkdir -p /tmp/empc-x-linux-drivers
 cd /tmp/empc-x-linux-drivers
 
 
-KERNEL=$(uname -r)
-
-VERSION=$(echo $KERNEL | cut -d. -f1)
-PATCHLEVEL=$(echo $KERNEL | cut -d. -f2)
-SUBLEVEL=$(echo $KERNEL | cut -d. -f3 | cut -d- -f1)
 
 
-
-
-wget -nv https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/plain/drivers/net/can/sja1000/sja1000.c?h=v$VERSION.$PATCHLEVEL.$SUBLEVEL -O sja1000.c
-wget -nv https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/plain/drivers/net/can/sja1000/sja1000.h?h=v$VERSION.$PATCHLEVEL.$SUBLEVEL -O sja1000.h
-wget -nv https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/plain/drivers/net/can/sja1000/sja1000_platform.c?h=v$VERSION.$PATCHLEVEL.$SUBLEVEL -O sja1000_platform.c
-
-echo "obj-m += sja1000.o" >Makefile
-echo "obj-m += sja1000_platform.o" >>Makefile
-
-echo "all:">>Makefile
-echo -e "\tmake -C /lib/modules/$KERNEL/build M=/tmp/empc-x-linux-drivers modules" >>Makefile
-
+# compile jtec_can driver
+cd /usr/src/janztec/jtec_can
 make
 
-
-if [ ! -f "sja1000.ko" ] || [ ! -f "sja1000_platform.ko" ]; then
- echo -e "$ERR Error: Installation failed! (driver modules build failed) $NC" 1>&2
- whiptail --title "Error" --msgbox "Installation failed! (driver modules build failed)" 10 60
+if [ ! -f "jtec_can.ko" ]; then
+ echo -e "$ERR Error: Installation failed! (driver module jtec_can build failed) $NC" 1>&2
+ whiptail --title "Error" --msgbox "Installation failed! (driver module jtec_can build failed)" 10 60
  exit 1
 fi
 
-/bin/cp -rf sja1000.ko /lib/modules/$KERNEL/kernel/drivers/net/can/spi/sja1000.ko
-/bin/cp -rf sja1000_platform.ko /lib/modules/$KERNEL/kernel/drivers/net/can/spi/sja1000_platform.ko
+/bin/cp -rf jtec_can.ko /lib/modules/$KERNEL/kernel/drivers/net/can/
+
+depmod -a
+
+
+
+# install ixconfig
+mkdir -p /usr/janz/bin
+wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/ixconfig -O /usr/janz/bin/ixconfig
+chmod 755 /usr/janz/bin/ixconfig
+
+
+# Install ixbus init service
+wget -nv https://raw.githubusercontent.com/janztec/empc-x-linux-drivers/master/src/ixbus -O /etc/init.d/ixbus
+chmod 755 /etc/init.d/ixbus
+update-rc.d ixbus defaults
+
+
+wget -nv https://raw.githubusercontent.com/janztec/empc-x-linux-drivers/master/scripts/empc-can-configbaudrate.sh -O /usr/bin/empc-can-configbaudrate.sh
+
+bash /usr/bin/empc-can-configbaudrate.sh
 
 
 if [ ! -f "/usr/local/bin/cansend" ]; then
@@ -109,6 +100,14 @@ if [ ! -f "/usr/local/bin/cansend" ]; then
 fi
 
 
-update-alternatives --set gcc "/usr/bin/gcc-$GCCVERBACKUP"
-update-alternatives --set g++ "/usr/bin/g++-$GCCVERBACKUP"
 
+
+cd /
+
+
+
+if (whiptail --title "emPC-X Installation Script" --yesno "Installation completed! reboot required\n\nreboot now?" 12 60) then
+
+    reboot
+
+fi
