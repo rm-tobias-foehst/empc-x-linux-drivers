@@ -65,7 +65,7 @@ do_start() {
 			i=0
 			while [ $i -lt $(($K/2)) ]
 			do
-			   ip link set can$i type can bitrate 1000000 triple-sampling on 
+			   #ip link set can$i type can bitrate 1000000 triple-sampling on 
 			   i=`expr $i + 1`
 			done
 			IFS=" "
