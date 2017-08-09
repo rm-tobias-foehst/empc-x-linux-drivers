@@ -7,8 +7,8 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
-
 CANS=$(/usr/janz/bin/ixconfig 2>&1 | grep iX-Module | grep CAN | wc -l)
+
 for (( can=0; can<$CANS; can++ ))
 do
 
@@ -26,11 +26,12 @@ do
         exitstatus=$?
         if [ $exitstatus = 0 ]; then
 
-         while read -r line
+         while IFS= read -r line
          do
           [[ ! "$line" =~ "can$can" ]] && echo "$line"
          done </etc/network/interfaces > /tmp/interfaces
          mv /tmp/interfaces /etc/network/interfaces
+
 
          echo "# can$can" >>/etc/network/interfaces
          echo "allow-hotplug can$can" >>/etc/network/interfaces
@@ -41,6 +42,5 @@ do
          echo -e "\tdown /sbin/ifconfig can$can down" >>/etc/network/interfaces
 
         fi
-
 
 done
