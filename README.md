@@ -1,8 +1,9 @@
 # emPC-X/A-E38xx & emVIEW-xxT/A-E38xx by Janz Tec AG
 
-WARNING!! EXPERIMENTAL: create a backup copy of your CFast card before applying these driver installation script!
+**WARNING!! EXPERIMENTAL**
+create a backup copy of your CFast card before applying this driver installation script!
 
-This script installs and configures the Socket CAN drivers for Janz Tec AG emPC-X based systems. 
+This script installs and configures **Socket CAN** drivers for Janz Tec AG emPC-X based systems. 
 
 ## Installation Instructions:
 
