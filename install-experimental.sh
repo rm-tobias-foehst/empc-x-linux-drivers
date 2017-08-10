@@ -14,6 +14,7 @@ WELCOME="These drivers will be compiled and installed:\n
 - CAN driver (SocketCAN)\n
 These software components will be installed:\n
 - ixconfig, ixbus, autoconf, libtool, libsocketcan, can-utils\n
+Important: create a backup copy of the system before installation!\n
 continue installation?"
 
 if (whiptail --title "emPC-X Installation Script" --yesno "$WELCOME" 20 60) then
