@@ -34,15 +34,15 @@ GCCVER=$(cat /proc/version | egrep -o 'gcc version [0-9]+\.[0-9]+' | egrep -o '[
 gcc --version | grep "$GCCVER" || (echo "$ERR Error: gcc $GCCVER not found! $NC"; exit 1);
 
 
-#rm -rf /tmp/empc-x-linux-drivers
+rm -rf /tmp/empc-x-linux-drivers
 mkdir -p /tmp/empc-x-linux-drivers
 cd /tmp/empc-x-linux-drivers
 
 
-
-
 # compile jtec_can driver
-cd /usr/src/janztec/jtec_can
+wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/jtec_can.zip -O jtec_can.zip
+unzip jtec_can.zip
+cd jtec_can
 make
 
 if [ ! -f "jtec_can.ko" ]; then
