@@ -24,7 +24,7 @@ else
 fi
 
 apt-get update -y
-apt-get -y install bc build-essential linux-headers-$(uname -r)
+apt-get -y install bc build-essential unzip linux-headers-$(uname -r)
 
 # get installed gcc version
 GCCVERBACKUP=$(gcc --version | egrep -o '[0-9]+\.[0-9]+' | head -n 1)
