@@ -26,6 +26,11 @@ fi
 apt-get update -y
 apt-get -y install bc build-essential unzip linux-headers-$(uname -r)
 
+
+if [ ! -f "/lib/modules/$KERNEL/build" ]; then
+ ln -s /usr/src/linux-headers-$KERNEL/ /lib/modules/$KERNEL/build
+fi 
+
 # get installed gcc version
 GCCVERBACKUP=$(gcc --version | egrep -o '[0-9]+\.[0-9]+' | head -n 1)
 # get gcc version of installed kernel
