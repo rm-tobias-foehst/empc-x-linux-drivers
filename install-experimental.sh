@@ -13,7 +13,7 @@ clear
 WELCOME="These drivers will be compiled and installed:\n
 - CAN driver (SocketCAN)\n
 These software components will be installed:\n
-- ixconfig, ixbus, autoconf, libtool, libsocketcan, can-utils\n
+- ixconfig, ixbus, autoconf, libtool, unzip, libsocketcan, can-utils\n
 Important: create a backup copy of the system before installation!\n
 continue installation?"
 
