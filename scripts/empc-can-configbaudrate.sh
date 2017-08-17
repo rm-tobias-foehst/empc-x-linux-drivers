@@ -38,7 +38,7 @@ do
          echo "iface can$can inet manual" >>/etc/network/interfaces
          echo -e "\tpre-up /sbin/ip link set can$can type can bitrate $BAUDRATE""000 triple-sampling on" >>/etc/network/interfaces
          echo -e "\tup /sbin/ip link set $can up txqueuelen 1000" >>/etc/network/interfaces
-         echo -e "\tdown /sbin/ifconfig can$can down" >>/etc/network/interfaces
+         echo -e "\tdown /sbin/ip can$can down" >>/etc/network/interfaces
 
         fi
 
