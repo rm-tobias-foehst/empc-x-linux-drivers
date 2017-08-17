@@ -65,17 +65,41 @@ depmod -a
 
 # install ixconfig
 mkdir -p /usr/janz/bin
-wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/ixconfig -O /usr/janz/bin/ixconfig
+ARCH=$(getconf LONG_BIT)
+if [ $ARCH -eq 64 ]; then
+ wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/ixconfig.64 -O /usr/janz/bin/ixconfig
+else
+ wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/ixconfig.32 -O /usr/janz/bin/ixconfig
+fi
+
+if [ ! -f "/usr/janz/bin/ixconfig" ]; then
+ echo -e "$ERR Error: Installation failed! (ixconfig not installed) $NC" 1>&2
+ whiptail --title "Error" --msgbox "Installation failed! (ixconfig not installed)" 10 60
+ exit 1
+fi
+
 chmod 755 /usr/janz/bin/ixconfig
 
 
 # Install ixbus init service
 wget -nv https://raw.githubusercontent.com/janztec/empc-x-linux-drivers/master/src/ixbus -O /etc/init.d/ixbus
+if [ ! -f "/etc/init.d/ixbus" ]; then
+ echo -e "$ERR Error: Installation failed! (ixconfig not installed) $NC" 1>&2
+ whiptail --title "Error" --msgbox "Installation failed! (ixconfig not installed)" 10 60
+ exit 1
+fi
+
 chmod 755 /etc/init.d/ixbus
 update-rc.d ixbus defaults
 
 
 wget -nv https://raw.githubusercontent.com/janztec/empc-x-linux-drivers/master/scripts/empc-can-configbaudrate.sh -O /usr/bin/empc-can-configbaudrate.sh
+if [ ! -f "/usr/bin/empc-can-configbaudrate.sh" ]; then
+ echo -e "$ERR Error: Installation failed! (empc-can-configbaudrate not installed) $NC" 1>&2
+ whiptail --title "Error" --msgbox "Installation failed! (empc-can-configbaudrate not installed)" 10 60
+ exit 1
+fi
+
 chmod 755 /usr/bin/empc-can-configbaudrate.sh
 bash /usr/bin/empc-can-configbaudrate.sh
 
