@@ -1,33 +1,33 @@
-# emPC-X/A-E38xx & emVIEW-xxT/A-E38xx by Janz Tec AG
+# emPC-X & emVIEW-8T,12T,15T,15WT/X by Janz Tec AG
 
-**WARNING!! EXPERIMENTAL**
-create a backup copy of your CFast card before applying this driver installation script!
-
-This script installs and configures **Socket CAN** drivers for Janz Tec AG emPC-X based systems. 
+This script installs and configures Linux **Socket CAN** drivers 
 
 ## Installation Instructions:
 
-Step1:
+**:heavy_exclamation_mark:  WARNING!! EXPERIMENTAL**
 
-Install Debian or Ubuntu operating system from DVD (64Bit)
+_create a backup copy of your CFast card/SSD before applying this driver installation script!_
 
-Step 2:
-```
-apt-get update
-```
 
-Step 3:
+**Step1:**
+
+Install Debian or Ubuntu operating system from DVD (64bit recommended)
+
+**Step 2:**
 ```
 sudo bash
-
-cd /home/user
-
+cd /tmp
 wget https://raw.githubusercontent.com/janztec/empc-x-linux-drivers/master/install-experimental.sh -O install-experimental.sh
-
 bash install-experimental.sh
 ```
 
-## Product page
+## Product Pages
 https://www.janztec.com/en/products/embedded-computing/embedded-pc/empc-x/
-![emPC-X](https://www.janztec.com/fileadmin/user_upload/Produkte/embedded/emPC-X/janztec_produkte_embedded_empc_x_front.jpg)
 
+https://www.janztec.com/en/products/embedded-computing/panel-pc/emview-8/
+
+https://www.janztec.com/en/products/embedded-computing/panel-pc/emview-12/
+
+https://www.janztec.com/en/products/embedded-computing/panel-pc/emview-15t/
+
+https://www.janztec.com/en/products/embedded-computing/panel-pc/emview-15wt/
