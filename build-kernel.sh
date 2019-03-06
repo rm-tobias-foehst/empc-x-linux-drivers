@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+set -e
+
 export LC_ALL=C
 
 ERR='\033[0;31m'
