@@ -43,6 +43,8 @@ cd KERNEL
 # Extract Kernel
 tar -xaf /usr/src/linux-source-*.tar.xz
 
+cd linux-source*
+
 # Apply Janz Tec specific Kernel patches
 wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/0006-serial.patch -O 0006-serial.patch
 patch -p2 < 0006-serial.patch
