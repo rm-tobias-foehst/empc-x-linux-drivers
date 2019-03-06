@@ -28,8 +28,10 @@ fi
 
 apt-get update -y
 
+# Remove old Kernel sources
 rm -f /usr/src/linux-source-*.tar.xz
 
+DEBIAN_FRONTEND=noninteractive apt-get purge -y linux-source linux-source-*
 DEBIAN_FRONTEND=noninteractive apt-get install -y linux-source build-essential libncurses5-dev fakeroot bc
 
 cd /usr/src/
