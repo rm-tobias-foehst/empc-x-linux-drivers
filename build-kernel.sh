@@ -38,12 +38,14 @@ rm -rf KERNEL
 mkdir -p KERNEL
 cd KERNEL
 
+# Extract Kernel
+tar -xaf /usr/src/linux-source-*.tar.xz
+
 # Apply Janz Tec specific Kernel patches
 wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/0006-serial.patch -O 0006-serial.patch
 patch -p2 < 0006-serial.patch
 
-# Extract Kernel
-tar -xaf /usr/src/linux-source-*.tar.xz
+
 # Use current Kernel configuration
 cp /boot/config-`uname -r` .config
 make olddefconfig
