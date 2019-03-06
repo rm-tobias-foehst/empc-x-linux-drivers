@@ -55,15 +55,17 @@ cp /boot/config-`uname -r` .config
 make olddefconfig
 
 # Compile using 2 CPUs
-make -j2
-
-# Install Kernel and modules
-make modules_install
-make install
-
-
-if (whiptail --title "Info" --yesno "Installation completed! reboot required\n\nreboot now?" 12 60) then
-
-    reboot
-
+if make -j2; then
+    # Install Kernel and modules
+    if make modules_install; then
+        if make install; then
+            if (whiptail --title "Info" --yesno "Installation completed! reboot required\n\nreboot now?" 12 60) then
+                reboot
+            fi
+            exit 0
+        fi
+    fi
 fi
+
+echo "Error. Installation failed!"
+exit 1
