@@ -31,7 +31,8 @@ rm -f /usr/src/linux-source-*.tar.xz
 DEBIAN_FRONTEND=noninteractive apt-get install -y linux-source build-essential libncurses5-dev fakeroot bc
 
 cd /usr/src/
-mkdir kernel
+rm -rf kernel
+mkdir -p kernel
 cd kernel
 
 tar -xaf /usr/src/linux-source-*.tar.xz
@@ -41,3 +42,10 @@ make -j2
 
 make modules_install
 make install
+
+
+if (whiptail --title "Info" --yesno "Installation completed! reboot required\n\nreboot now?" 12 60) then
+
+    reboot
+
+fi
