@@ -1,0 +1,24 @@
+diff -u -r -N A/KERNEL/drivers/tty/serial/8250/8250_port.c B/KERNEL/drivers/tty/serial/8250/8250_port.c
+--- A/KERNEL/drivers/tty/serial/8250/8250_port.c	2018-01-08 16:19:04.000000000 +0100
++++ B/KERNEL/drivers/tty/serial/8250/8250_port.c	2018-02-19 15:10:56.204522504 +0100
+@@ -2572,6 +2572,7 @@
+ 	up->lcr = cval;					/* Save computed LCR */
+ 
+ 	if (up->capabilities & UART_CAP_FIFO && port->fifosize > 1) {
++		up->fcr = uart_config[port->type].fcr; // gs: 15.02.2017 Add missing fcr setting!
+ 		/* NOTE: If fifo_bug is not set, a user can set RX_trigger. */
+ 		if ((baud < 2400 && !up->dma) || up->fifo_bug) {
+ 			up->fcr &= ~UART_FCR_TRIGGER_MASK;
+
+--- A/KERNEL/drivers/tty/serial/serial_core.c	2018-03-21 12:06:45.000000000 +0100
++++ B/KERNEL/drivers/tty/serial/serial_core.c	2018-03-28 08:04:54.999192773 +0200
+@@ -911,6 +911,9 @@
+ 		uport->regshift = new_info->iomem_reg_shift;
+ 		uport->mapbase = (unsigned long)new_info->iomem_base;
+ 
++		/* JanzTecAG: set also uport->flag, need this flag for 8250_core ioremap */
++		uport->flags = new_info->flags;
++
+ 		/*
+ 		 * Claim and map the new regions
+ 		 */
