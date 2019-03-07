@@ -1,6 +1,6 @@
 # emPC-X & emVIEW-8T,12T,15T,15WT/X by Janz Tec AG
 
-This script installs and configures Linux **Socket CAN** drivers 
+This script installs and configures Linux **Socket CAN** and **I2C_SSM** drivers 
 
 ## Installation Instructions:
 
