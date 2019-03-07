@@ -75,6 +75,10 @@ fi
 
 popd
 
+if ! cat /etc/modules | grep i2c_dev > /dev/null; then
+    echo "" >> /etc/modules
+    echo "i2c_dev" >> /etc/modules
+fi
 
 depmod -a
 
