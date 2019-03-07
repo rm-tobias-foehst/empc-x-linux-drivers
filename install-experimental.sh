@@ -82,6 +82,15 @@ fi
 
 depmod -a
 
+if ! cat /etc/default/grub | grep iomem=relaxed > /dev/null; then
+    if ! cat /etc/default/grub | grep quiet  > /dev/null; then
+        echo -e "$ERR Error: Installation failed! quiet entry in GRUB_CMDLINE_LINUX_DEFAULT not found! $NC" 1>&2
+        whiptail --title "Error" --msgbox "Installation failed! quiet entry in GRUB_CMDLINE_LINUX_DEFAULT not found!" 10 60
+    fi
+    sed -i 's/quiet/quiet iomem=relaxed/' /etc/default/grub
+    update-grub
+fi
+
 # install ixconfig
 mkdir -p /usr/janz/bin
 ARCH=$(getconf LONG_BIT)
