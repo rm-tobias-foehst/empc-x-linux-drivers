@@ -62,7 +62,7 @@ popd
 
 # compile i2c-ixssm driver
 wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/i2c-ixssm.zip -O i2c-ixssm.zip
-unzip i2c-ixssm.zip
+unzip -o i2c-ixssm.zip
 pushd i2c-ixssm
 make
 
