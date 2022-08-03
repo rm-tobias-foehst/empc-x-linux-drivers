@@ -49,29 +49,27 @@ cd /tmp/empc-x-linux-drivers
 wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/jtec_can.zip -O jtec_can.zip
 unzip jtec_can.zip
 pushd jtec_can
-make
+make driver install
 
-if [ ! -f "jtec_can.ko" ]; then
+if [ ! -f "/lib/modules/$KERNEL/kernel/drivers/net/can/sja1000/jtec_can.ko" ]; then
  echo -e "$ERR Error: Installation failed! (driver module jtec_can build failed) $NC" 1>&2
  whiptail --title "Error" --msgbox "Installation failed! (driver module jtec_can build failed)" 10 60
  exit 1
 fi
-/bin/cp -rf jtec_can.ko /lib/modules/$KERNEL/kernel/drivers/net/can/
 
 popd
 
 # compile i2c-ixssm driver
 wget -nv https://github.com/janztec/empc-x-linux-drivers/raw/master/src/i2c-ixssm.zip -O i2c-ixssm.zip
-unzip -o i2c-ixssm.zip
+unzip i2c-ixssm.zip
 pushd i2c-ixssm
-make
+make driver install
 
-if [ ! -f "i2c-ixssm.ko" ]; then
+if [ ! -f "/lib/modules/$KERNEL/kernel/drivers/misc/i2c-ixssm.ko" ]; then
  echo -e "$ERR Error: Installation failed! (driver module i2c-ixssm build failed) $NC" 1>&2
  whiptail --title "Error" --msgbox "Installation failed! (driver module i2c-ixssm build failed)" 10 60
  exit 1
 fi
-/bin/cp -rf i2c-ixssm.ko /lib/modules/$KERNEL/kernel/drivers/misc/
 
 popd
 
